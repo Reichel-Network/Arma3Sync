@@ -25,15 +25,15 @@ public class ErrorLogDialog implements DataAccessConstants {
 	public void show() {
 
 		// Dialog message
-		String dialogMessage = "An unexpected error has occured." + "\n\n"
-				+ "Do you want export the errors log file to desktop (" + LOG_FILE_NAME + ")?" + "\n\n";
+		String dialogMessage = "An unexpected error has occurred." + "\n\n"
+				+ "Do you want to export the error log file to your desktop (" + LOG_FILE_NAME + ")?" + "\n\n";
 
 		int value = JOptionPane.showConfirmDialog(facade.getMainPanel(), dialogMessage, "Error", 0,
 				JOptionPane.ERROR_MESSAGE);
 
 		if (value == 0) {
 			// Title
-			String title = "An unexpected error has occured.";
+			String title = "An unexpected error has occurred.";
 
 			// ArmA3Sync installed version
 			String arma3SyncInstalledVersion = "ArmA3Sync Installed version = " + Version.getVersion();

@@ -356,7 +356,7 @@ public class DescriptionPanel extends JPanel {
 				for (String s : forbiddenCharactersList) {
 					forbiddenCharactersLine = forbiddenCharactersLine + " " + s;
 				}
-				String message = "Repository name must not contains special characters like:"
+				String message = "Repository names cannot contain these special characters:"
 						+ forbiddenCharactersLine;
 				throw new CheckException(message);
 			}

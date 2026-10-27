@@ -166,7 +166,7 @@ public class FilesSynchronizationProcessor {
 			}
 
 			if (!new File(defaultDownloadLocation).exists()) {
-				throw new IOException("Default destination folder does not exists: " + defaultDownloadLocation);
+				throw new IOException("Default destination folder does not exist: " + defaultDownloadLocation);
 			}
 
 			diskUsageListener.init(new File(defaultDownloadLocation), connexionService);

@@ -615,7 +615,7 @@ public class AdminPanel extends JPanel implements UIConstants {
 						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			} else if (!new File(path).exists()) {
-				JOptionPane.showMessageDialog(facade.getMainPanel(), "Repository main folder location does not exists.",
+				JOptionPane.showMessageDialog(facade.getMainPanel(), "Repository main folder location does not exist.",
 						repositoryName, JOptionPane.ERROR_MESSAGE);
 				return;
 			}

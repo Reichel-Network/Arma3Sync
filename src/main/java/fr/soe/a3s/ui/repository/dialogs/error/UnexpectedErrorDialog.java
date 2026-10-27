@@ -29,8 +29,8 @@ public class UnexpectedErrorDialog implements DataAccessConstants {
 	public void show() {
 
 		// Dialog message
-		String dialogMessage = "An unexpected error has occured." + "\n\n"
-				+ "Do you want export the errors log file to desktop (" + LOG_FILE_NAME + ")?" + "\n\n";
+		String dialogMessage = "An unexpected error has occurred." + "\n\n"
+				+ "Do you want to export the error log file to your desktop (" + LOG_FILE_NAME + ")?" + "\n\n";
 
 		int value = JOptionPane.showConfirmDialog(facade.getMainPanel(), dialogMessage, dialogTitle, 0,
 				JOptionPane.ERROR_MESSAGE);
@@ -38,7 +38,7 @@ public class UnexpectedErrorDialog implements DataAccessConstants {
 		if (value == 0) {
 			// Title
 			String title = dialogTitle + " " + "finished with errors for repository name: " + repositoryName + "\n"
-					+ "An unexpected error has occured.";
+					+ "An unexpected error has occurred.";
 
 			// Stacktrace as a string
 			StringWriter sw = new StringWriter();
