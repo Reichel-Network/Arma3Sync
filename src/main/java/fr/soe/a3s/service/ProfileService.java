@@ -94,7 +94,7 @@ public class ProfileService extends ObjectDTOtransformer {
 
 		Profile profile = profileDAO.getMap().get(initProfileName);
 		if (profile == null) {
-			throw new ProfileException("Profile with name " + initProfileName + " does not exists.");
+			throw new ProfileException("Profile with name " + initProfileName + " does not exist.");
 		}
 		profile.setName(newProfileName);
 		profileDAO.getMap().remove(initProfileName);
@@ -107,7 +107,7 @@ public class ProfileService extends ObjectDTOtransformer {
 
 		Profile profile = profileDAO.getMap().get(profileName);
 		if (profile == null) {
-			throw new ProfileException("Profile with name " + profileName + " does not exists.");
+			throw new ProfileException("Profile with name " + profileName + " does not exist.");
 		}
 		profileDAO.getMap().remove(profileName);
 		profileDAO.delete(profile);

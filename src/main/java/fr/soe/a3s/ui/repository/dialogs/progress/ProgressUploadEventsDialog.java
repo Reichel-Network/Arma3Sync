@@ -20,7 +20,7 @@ public class ProgressUploadEventsDialog extends AbstractProgressDialog {
 	private final RepositoryService repositoryService = new RepositoryService();
 
 	public ProgressUploadEventsDialog(Facade facade, String repositoryName) {
-		super(facade, "Uploading events informations...");
+		super(facade, "Uploading event information...");
 		this.repositoryName = repositoryName;
 	}
 
@@ -55,7 +55,7 @@ public class ProgressUploadEventsDialog extends AbstractProgressDialog {
 					setVisible(false);
 					JOptionPane.showMessageDialog(
 							facade.getMainPanel(),
-							"Events informatons have been uploaded to repository.",
+							"Event information has been uploaded to the repository.",
 							repositoryName, JOptionPane.INFORMATION_MESSAGE);
 					ProgressSynchronizationDialog synchronizingPanel = new ProgressSynchronizationDialog(
 							facade);

@@ -29,7 +29,7 @@ public class HeaderErrorDialog implements DataAccessConstants {
 		// Dialog message
 		String dialogMessage = "Repository name: " + repositoryName + "\n"
 				+ "The server appears to not support HTTP partial file transfer." + "\n\n"
-				+ "Do you want export the server response header into file to desktop (" + LOG_FILE_NAME + ")?"
+				+ "Do you want to export the server response headers to your desktop (" + LOG_FILE_NAME + ")?"
 				+ "\n\n";
 
 		int value = JOptionPane.showConfirmDialog(facade.getMainPanel(), dialogMessage, dialogTitle, 0,

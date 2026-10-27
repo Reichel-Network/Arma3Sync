@@ -15,7 +15,7 @@ public class RepositoryConsoleErrorPrinter {
 			Exception ex) {
 
 		String message = "Repository: " + repositoryName
-				+ " - An unexpected error has occured.";
+				+ " - An unexpected error has occurred.";
 		System.out.println(message);
 		ex.printStackTrace();
 		return message;

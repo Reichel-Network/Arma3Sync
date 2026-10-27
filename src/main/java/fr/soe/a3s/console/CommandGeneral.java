@@ -537,11 +537,11 @@ public class CommandGeneral {
 		if (sourceDirectoryPath.isEmpty()) {
 			message = "Source directory is empty!";
 		} else if (!new File(sourceDirectoryPath).exists()) {
-			message = "Source directory does not exists!";
+			message = "Source directory does not exist.";
 		} else if (targetDirectoryPath.isEmpty()) {
 			message = "Target directory is empty!";
 		} else if (!new File(targetDirectoryPath).exists()) {
-			message = "Target directory does not exists!";
+			message = "Target directory does not exist.";
 		} else if (!Files.isWritable(FileSystems.getDefault().getPath(targetDirectoryPath))) {// Check write permissions
 																								// on target
 																								// directory

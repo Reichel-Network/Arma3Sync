@@ -437,7 +437,7 @@ public class RepositoryService extends ObjectDTOtransformer implements DataAcces
 		}
 
 		if (!new File(defaultDownloadLocation).exists()) {
-			throw new IOException("Default destination folder does not exists: " + defaultDownloadLocation);
+			throw new IOException("Default destination folder does not exist: " + defaultDownloadLocation);
 		}
 
 		// 1. Extract event addons if any

@@ -226,14 +226,14 @@ public class EventsPanel extends JPanel implements UIConstants {
 		/* Right click menu */
 		popup = new JPopupMenu();
 
-		menuItemSetRequired = new JMenuItem("Set reqired");
+		menuItemSetRequired = new JMenuItem("Set required");
 		menuItemSetRequired.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				popupActionPerformed(evt);
 			}
 		});
-		menuItemSetRequired.setActionCommand("Set reqired");
+		menuItemSetRequired.setActionCommand("Set required");
 		popup.add(menuItemSetRequired);
 
 		menuItemSetOptional = new JMenuItem("Set optional");
@@ -442,7 +442,7 @@ public class EventsPanel extends JPanel implements UIConstants {
 		buttonEdit.setToolTipText("Edit event");
 		buttonDuplicate.setToolTipText("Duplicate event");
 		buttonRemove.setToolTipText("Remove event");
-		buttonUpload.setToolTipText("Upload events informations");
+		buttonUpload.setToolTipText("Upload event information");
 		buttonUploadOptions.setToolTipText("Set upload options");
 		buttonSaveToDisk.setToolTipText("Save to disk (local repository)");
 	}
@@ -593,7 +593,7 @@ public class EventsPanel extends JPanel implements UIConstants {
 		String path = repositoryService.getRepositoryPath(repositoryName);
 		if ("".equals(path) || path == null) {
 			String message = "Repository main folder location is missing." + "\n"
-					+ "Please checkout the Repository Administation panel.";
+					+ "Please check the Repository Administration panel.";
 			JOptionPane.showMessageDialog(facade.getMainPanel(), message, repositoryName, JOptionPane.WARNING_MESSAGE);
 		} else if (!(new File(path)).exists()) {
 			String message = "Repository main folder location: " + path + " does not exist.";
@@ -602,7 +602,7 @@ public class EventsPanel extends JPanel implements UIConstants {
 			try {
 				repositoryService.writeEvents(repositoryName);
 				JOptionPane.showMessageDialog(facade.getMainPanel(),
-						"Events informatons have been saved to the repository.", repositoryName,
+						"Event information has been saved to the repository.", repositoryName,
 						JOptionPane.INFORMATION_MESSAGE);
 				facade.getMainPanel().updateTabs(OP_REPOSITORY_CHANGED);
 			} catch (WritingException e) {
@@ -976,7 +976,7 @@ public class EventsPanel extends JPanel implements UIConstants {
 
 	private void popupActionPerformed(ActionEvent evt) {
 
-		if (evt.getActionCommand().equals("Set reqired")) {
+		if (evt.getActionCommand().equals("Set required")) {
 			setRequired();
 		} else if (evt.getActionCommand().equals("Set optional")) {
 			setOptional();

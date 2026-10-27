@@ -2,13 +2,19 @@ package fr.soe.a3s.dao.repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileSystemLoopException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -497,38 +503,42 @@ public class RepositoryBuildProcessor implements DataAccessConstants, Observable
 	}
 
 	private long getRepositoryContentSize(Path repositoryRoot) throws IOException {
-		try (var paths = Files.walk(repositoryRoot)) {
-			return paths
-					.filter(path -> {
-						Path relative = repositoryRoot.relativize(path);
-						return relative.getNameCount() == 0
-								|| !relative.getName(0).toString().equalsIgnoreCase(A3S_FOlDER_NAME);
-					})
-					.filter(Files::isRegularFile)
-					.mapToLong(path -> {
-						try {
-							return Files.size(path);
-						} catch (IOException e) {
-							throw new RepositoryContentSizeException(e);
+		final long[] totalSize = { 0L };
+		Files.walkFileTree(repositoryRoot, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE,
+				new SimpleFileVisitor<Path>() {
+					@Override
+					public FileVisitResult preVisitDirectory(Path directory, BasicFileAttributes attributes) {
+						Path relative = repositoryRoot.relativize(directory);
+						if (relative.getNameCount() > 0
+								&& relative.getName(0).toString().equalsIgnoreCase(A3S_FOlDER_NAME)) {
+							return FileVisitResult.SKIP_SUBTREE;
 						}
-					})
-					.sum();
-		} catch (RepositoryContentSizeException e) {
-			throw e.getCause();
-		}
-	}
+						return FileVisitResult.CONTINUE;
+					}
 
-	private static class RepositoryContentSizeException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
+						Path relative = repositoryRoot.relativize(file);
+						if (relative.getNameCount() > 0
+								&& relative.getName(0).toString().equalsIgnoreCase(A3S_FOlDER_NAME)) {
+							return FileVisitResult.CONTINUE;
+						}
+						if (attributes.isRegularFile()) {
+							totalSize[0] += attributes.size();
+						}
+						return FileVisitResult.CONTINUE;
+					}
 
-		private RepositoryContentSizeException(IOException cause) {
-			super(cause);
-		}
-
-		@Override
-		public synchronized IOException getCause() {
-			return (IOException) super.getCause();
-		}
+					@Override
+					public FileVisitResult visitFileFailed(Path file, IOException exception) throws IOException {
+						if (exception instanceof FileSystemLoopException) {
+							System.out.println("Warning: Skipping symbolic-link loop while calculating repository size: " + file);
+							return FileVisitResult.CONTINUE;
+						}
+						throw exception;
+					}
+				});
+		return totalSize[0];
 	}
 
 	private void determineCompressionRatio(SyncTreeNode node) {

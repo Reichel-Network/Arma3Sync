@@ -41,7 +41,7 @@ public class ErrorsListDialog implements DataAccessConstants {
 			if (e instanceof IOException) {
 				messages.add(e.getMessage());
 			} else {
-				String coreMessage = "An unexpected error has occured.";
+				String coreMessage = "An unexpected error has occurred.";
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw);
 				e.printStackTrace(pw);
@@ -64,7 +64,7 @@ public class ErrorsListDialog implements DataAccessConstants {
 			}
 		}
 
-		message = message + "\n\n" + "Do you want export the errors log file to desktop (" + LOG_FILE_NAME + ")?"
+		message = message + "\n\n" + "Do you want to export the error log file to your desktop (" + LOG_FILE_NAME + ")?"
 				+ "\n\n";
 
 		int value = JOptionPane.showConfirmDialog(facade.getMainPanel(), message, dialogTitle, 0,

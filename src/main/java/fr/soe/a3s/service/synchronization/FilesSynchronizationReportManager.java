@@ -118,7 +118,7 @@ public class FilesSynchronizationReportManager {
 			if (e instanceof IOException) {
 				messages.add("- " + e.getMessage());
 			} else {
-				String coreMessage = "- An unexpected error has occured.";
+				String coreMessage = "- An unexpected error has occurred.";
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw);
 				e.printStackTrace(pw);

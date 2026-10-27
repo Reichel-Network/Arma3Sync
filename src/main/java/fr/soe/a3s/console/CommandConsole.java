@@ -197,7 +197,7 @@ public class CommandConsole extends CommandGeneral {
 			for (String stg : forbiddenCharactersList) {
 				if (name.contains(stg)) {
 					System.out.println(
-							"Repository name must not contains special characters like:" + forbiddenCharactersLine);
+							"Repository names cannot contain these special characters:" + forbiddenCharactersLine);
 					name = "";
 					break;
 				}
@@ -313,7 +313,7 @@ public class CommandConsole extends CommandGeneral {
 			if (path.isEmpty()) {
 				folderLocationIsWrong = false;
 			} else if (!new File(path).exists() || !new File(path).isDirectory()) {
-				System.out.println("Target folder does not exists!");
+				System.out.println("Target folder does not exist.");
 				folderLocationIsWrong = true;
 			} else {
 				folderLocationIsWrong = false;
@@ -346,7 +346,7 @@ public class CommandConsole extends CommandGeneral {
 		} catch (RepositoryException e) {
 			System.out.println(e.getMessage());
 		} catch (Exception e) {
-			System.out.println("An unexpeted error has occured.");
+			System.out.println("An unexpected error has occurred.");
 			e.printStackTrace();
 		} finally {
 			execute();
@@ -391,7 +391,7 @@ public class CommandConsole extends CommandGeneral {
 					if (path.isEmpty()) {
 						folderLocationIsWrong = true;
 					} else if (!new File(path).exists() || !new File(path).isDirectory()) {
-						System.out.println("Target folder does not exists!");
+						System.out.println("Target folder does not exist.");
 						folderLocationIsWrong = true;
 					} else {
 						folderLocationIsWrong = false;
@@ -486,7 +486,7 @@ public class CommandConsole extends CommandGeneral {
 			if (excludedFilePath.isEmpty()) {
 				excludedFilePathIsWrong = false;
 			} else if (!(new File(excludedFilePath)).exists()) {
-				System.out.println("Wrong path, file does not exists.");
+				System.out.println("Invalid path: the file does not exist.");
 				excludedFilePathIsWrong = true;
 			} else {
 				repositoryService.addExcludedFilesPathFromBuild(repositoryName, excludedFilePath);
@@ -504,7 +504,7 @@ public class CommandConsole extends CommandGeneral {
 			if (excludedFolderFromSync.isEmpty()) {
 				excludedFolderFromSyncIsWrong = false;
 			} else if (!(new File(excludedFolderFromSync)).exists()) {
-				System.out.println("Wrong path, file does not exists.");
+				System.out.println("Invalid path: the file does not exist.");
 				excludedFolderFromSyncIsWrong = true;
 			} else {
 				repositoryService.addExcludedFilesPathFromBuild(repositoryName, excludedFolderFromSync);
@@ -613,7 +613,7 @@ public class CommandConsole extends CommandGeneral {
 			if (remove) {
 				System.out.println("Repository " + name + " deleted.");
 			} else {
-				System.out.println("Failded to remove repository.");
+				System.out.println("Failed to remove the repository.");
 			}
 		} catch (RepositoryException e) {
 			System.out.println(e.getMessage());
@@ -657,7 +657,7 @@ public class CommandConsole extends CommandGeneral {
 			if (destinationFolderPath.isEmpty()) {
 				destinationFolderIsWrong = true;
 			} else if (!new File(destinationFolderPath).exists()) {
-				System.out.println("Destination folder does not exists!");
+				System.out.println("Destination folder does not exist.");
 				destinationFolderIsWrong = true;
 			} else {
 				destinationFolderIsWrong = false;
