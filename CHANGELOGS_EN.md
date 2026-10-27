@@ -5,6 +5,12 @@ Version-specific release changelogs are stored in
 The matching file is checked by the release build and copied to the release
 archive as `RELEASE_NOTES.md`.
 
+## 2026.4.17 — Beta
+
+- Repository size calculation now includes files in symbolic-link and junction
+  directories; symbolic-link loops are skipped with a warning.
+- Corrected spelling and grammar in event, error, and console messages.
+
 ## 2026.4.13 — Released
 
 - Added Arma 3 Launcher HTML preset import with detection of locally available

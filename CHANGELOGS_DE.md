@@ -5,6 +5,14 @@ Die versionsbezogenen Release-Changelogs liegen unter
 Versionen geführt. Die jeweilige Datei wird beim Release-Build geprüft und als
 `RELEASE_NOTES.md` in das Release-Archiv übernommen.
 
+## 2026.4.17 — Beta
+
+- Die Berechnung der Repository-Größe berücksichtigt jetzt auch Dateien in
+  symbolischen Links und Junctions. Endlosschleifen durch symbolische Links
+  werden mit einer Warnung übersprungen.
+- Rechtschreibung und Grammatik in Event-, Fehler- und Konsolenmeldungen wurden
+  korrigiert.
+
 ## 2026.4.13 — Veröffentlicht
 
 - Import von Arma-3-Launcher-HTML-Presets mit Erkennung vorhandener und
