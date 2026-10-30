@@ -99,6 +99,12 @@ gradle fatJar
 ```
 Outputs `build/libs/Arma3Sync-all.jar` with dependencies bundled.
 
+### Headless metadata bridge (FASTER companion)
+```bash
+gradle metadataBridgeJar
+```
+Outputs `build/libs/a3s-metadata-bridge-<version>-all.jar` — a **headless** classic `.a3s` metadata reader/writer (JSON in/out, non-zero exit codes, no Swing). Intended only as FASTER’s internal `IA3SMetadataStore` adapter. See [`docs/BRIDGE.md`](docs/BRIDGE.md).
+
 ### Windows installer (`jpackage`)
 ```bash
 gradle jpackageWin
