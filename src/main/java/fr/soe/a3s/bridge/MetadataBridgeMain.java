@@ -75,6 +75,9 @@ public final class MetadataBridgeMain {
 		} catch (IOException e) {
 			err.println(e.getMessage());
 			return BridgeExitCodes.IO_ERROR;
+		} catch (BridgeDataException e) {
+			err.println(e.getMessage());
+			return BridgeExitCodes.DATA_ERROR;
 		} catch (RuntimeException e) {
 			err.println(e.getMessage() == null ? e.toString() : e.getMessage());
 			return BridgeExitCodes.DATA_ERROR;
@@ -117,14 +120,24 @@ public final class MetadataBridgeMain {
 	private int write(Map<String, String> options) throws IOException {
 		String targetArg = require(options, "target");
 		String kindArg = require(options, "kind");
-		if (MetadataKind.isAll(kindArg)) {
-			throw new IllegalArgumentException("write requires a single --kind (not all).");
-		}
-		MetadataKind kind = MetadataKind.parse(kindArg);
 		String inArg = options.getOrDefault("in", "-");
 		String json = readText(inArg);
-		Serializable domain = codec.fromJson(kind, json);
 		Path a3sDir = MetadataSource.resolveWriteA3sDir(Path.of(targetArg));
+
+		if (MetadataKind.isAll(kindArg)) {
+			Map<MetadataKind, Serializable> files = codec.fromJsonAll(json);
+			int written = 0;
+			for (Map.Entry<MetadataKind, Serializable> entry : files.entrySet()) {
+				Path file = a3sDir.resolve(entry.getKey().getFileName());
+				blobIO.write(file, entry.getValue());
+				written++;
+			}
+			out.println("Wrote " + written + " metadata file(s) to " + a3sDir.toAbsolutePath().normalize());
+			return BridgeExitCodes.SUCCESS;
+		}
+
+		MetadataKind kind = MetadataKind.parse(kindArg);
+		Serializable domain = codec.fromJson(kind, json);
 		Path file = a3sDir.resolve(kind.getFileName());
 		blobIO.write(file, domain);
 		out.println("Wrote " + file.toAbsolutePath().normalize());
@@ -223,7 +236,7 @@ public final class MetadataBridgeMain {
 		stream.println();
 		stream.println("Usage:");
 		stream.println("  read  --source <url|path> [--kind all|autoconfig|sync|serverinfo|changelogs|events] [--out -|file]");
-		stream.println("  write --target <content-root|.a3s-dir> --kind <kind> [--in -|file]");
+		stream.println("  write --target <content-root|.a3s-dir> --kind <kind|all> [--in -|file]");
 		stream.println("  copy  --from <url|path> --to <content-root|.a3s-dir> [--kind all|...]");
 		stream.println();
 		stream.println("Exit codes: 0 success, 1 usage, 2 I/O/network, 3 data/JSON error");
