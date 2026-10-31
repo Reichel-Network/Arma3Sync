@@ -72,7 +72,7 @@ public final class MetadataJsonCodec {
 	}
 
 	public Serializable fromJson(MetadataKind kind, String json) {
-		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+		JsonObject root = parseRootObject(json);
 		JsonElement payload = root.get(kind.getFileName());
 		if (payload == null || payload.isJsonNull()) {
 			if (root.has("files") && root.get("files").isJsonObject()) {
@@ -80,12 +80,70 @@ public final class MetadataJsonCodec {
 			}
 		}
 		if (payload == null || payload.isJsonNull()) {
-			throw new IllegalArgumentException("JSON is missing payload for kind: " + kind.getFileName());
+			throw new BridgeDataException("JSON is missing payload for kind: " + kind.getFileName());
 		}
 		if (!payload.isJsonObject()) {
-			throw new IllegalArgumentException("Expected object payload for kind: " + kind.getFileName());
+			throw new BridgeDataException("Expected object payload for kind: " + kind.getFileName());
 		}
-		return fromJsonElement(kind, payload.getAsJsonObject());
+		try {
+			return fromJsonElement(kind, payload.getAsJsonObject());
+		} catch (BridgeDataException e) {
+			throw e;
+		} catch (RuntimeException e) {
+			throw new BridgeDataException(
+					"Failed to map JSON for kind " + kind.getFileName() + ": " + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Decode a {@code kind=all} envelope into domain objects. Missing or null
+	 * entries under {@code files} are omitted from the result map.
+	 */
+	public Map<MetadataKind, Serializable> fromJsonAll(String json) {
+		JsonObject root = parseRootObject(json);
+		if (!root.has("files") || !root.get("files").isJsonObject()) {
+			throw new BridgeDataException("JSON kind=all write requires a files object.");
+		}
+		JsonObject files = root.getAsJsonObject("files");
+		Map<MetadataKind, Serializable> result = new LinkedHashMap<>();
+		for (MetadataKind kind : MetadataKind.values()) {
+			JsonElement payload = files.get(kind.getFileName());
+			if (payload == null || payload.isJsonNull()) {
+				continue;
+			}
+			if (!payload.isJsonObject()) {
+				throw new BridgeDataException("Expected object payload for kind: " + kind.getFileName());
+			}
+			try {
+				result.put(kind, fromJsonElement(kind, payload.getAsJsonObject()));
+			} catch (BridgeDataException e) {
+				throw e;
+			} catch (RuntimeException e) {
+				throw new BridgeDataException(
+						"Failed to map JSON for kind " + kind.getFileName() + ": " + e.getMessage(), e);
+			}
+		}
+		if (result.isEmpty()) {
+			throw new BridgeDataException("JSON kind=all write has no non-null files to write.");
+		}
+		return result;
+	}
+
+	private JsonObject parseRootObject(String json) {
+		if (json == null || json.isBlank()) {
+			throw new BridgeDataException("JSON input is empty.");
+		}
+		try {
+			JsonElement element = JsonParser.parseString(json);
+			if (element == null || !element.isJsonObject()) {
+				throw new BridgeDataException("JSON root must be an object.");
+			}
+			return element.getAsJsonObject();
+		} catch (BridgeDataException e) {
+			throw e;
+		} catch (RuntimeException e) {
+			throw new BridgeDataException("Invalid JSON: " + e.getMessage(), e);
+		}
 	}
 
 	private JsonElement toJsonElement(MetadataKind kind, Object domainObject) {
@@ -156,7 +214,7 @@ public final class MetadataJsonCodec {
 	private AbstractProtocole decodeProtocol(JsonObject json) {
 		String typeName = asString(json, "type");
 		if (typeName == null || typeName.isBlank()) {
-			throw new IllegalArgumentException("protocol.type is required");
+			throw new BridgeDataException("protocol.type is required");
 		}
 		ProtocolType protocolType;
 		try {
@@ -164,7 +222,7 @@ public final class MetadataJsonCodec {
 		} catch (IllegalArgumentException e) {
 			ProtocolType byDescription = ProtocolType.getEnum(typeName);
 			if (byDescription == null) {
-				throw new IllegalArgumentException("Unknown protocol type: " + typeName);
+				throw new BridgeDataException("Unknown protocol type: " + typeName);
 			}
 			protocolType = byDescription;
 		}
@@ -180,7 +238,7 @@ public final class MetadataJsonCodec {
 						|| protocolType == ProtocolType.SFTP
 						|| protocolType == ProtocolType.FTPS));
 		if (protocol == null) {
-			throw new IllegalArgumentException("Unsupported protocol type: " + typeName);
+			throw new BridgeDataException("Unsupported protocol type: " + typeName);
 		}
 		if (json.has("connectionTimeOut") && !json.get("connectionTimeOut").isJsonNull()) {
 			protocol.setConnectionTimeOut(asString(json, "connectionTimeOut"));
@@ -471,7 +529,7 @@ public final class MetadataJsonCodec {
 			try {
 				return new Date(Long.parseLong(raw));
 			} catch (NumberFormatException ignored) {
-				throw new IllegalArgumentException("Invalid date: " + raw, e);
+				throw new BridgeDataException("Invalid date: " + raw, e);
 			}
 		}
 	}
