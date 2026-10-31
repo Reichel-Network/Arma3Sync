@@ -36,6 +36,7 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
     implementation 'org.apache.httpcomponents:httpcore:4.4.16'
     implementation 'commons-codec:commons-codec:1.16.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.formdev:flatlaf:3.6.1'
     implementation 'com.formdev:flatlaf-extras:3.6.1'
     implementation 'com.github.weisj:jsvg:2.0.0'
@@ -105,6 +106,43 @@ tasks.register('fatJar', Jar) {
         attributes(
                 'Main-Class': application.mainClass.get(),
                 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+        )
+    }
+}
+
+def bridgeUiDependencyPatterns = [
+        ~/flatlaf.*/,
+        ~/jsvg.*/,
+        ~/JTattoo.*/,
+        ~/junique.*/,
+        ~/jshortcut.*/,
+        ~/sshd-.*/,
+        ~/sardine.*/,
+        ~/commons-net.*/,
+        ~/httpclient.*/,
+        ~/httpcore.*/,
+        ~/commons-codec.*/
+]
+
+tasks.register('metadataBridgeJar', Jar) {
+    group = 'build'
+    description = 'Headless classic .a3s metadata bridge JAR for FASTER (no Swing main).'
+    archiveBaseName = 'a3s-metadata-bridge'
+    archiveClassifier = 'all'
+    dependsOn configurations.runtimeClasspath, classes
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.main.output)
+    from {
+        configurations.runtimeClasspath.findAll { file ->
+            def name = file.name
+            !bridgeUiDependencyPatterns.any { pattern -> name ==~ pattern }
+        }.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes(
+                'Main-Class': 'fr.soe.a3s.bridge.MetadataBridgeMain',
+                'Implementation-Title': 'a3s-metadata-bridge',
                 'Implementation-Version': project.version
         )
     }

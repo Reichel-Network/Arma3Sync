@@ -13,6 +13,7 @@
 | Schlankes Distributions-Layout | `gradle installDist` | `build/install/Arma3Sync` mit Startskripten für Win/Linux |
 | ZIP/TAR Distributionsarchive | `gradle packageApp` | `build/distributions/Arma3Sync.zip` / `.tar` |
 | Fat JAR (alle Abhängigkeiten) | `gradle fatJar` | `build/libs/Arma3Sync-all.jar` – startbar via `java -jar` |
+| Headless metadata bridge (FASTER) | `gradle metadataBridgeJar` | `build/libs/a3s-metadata-bridge-*-all.jar` – see [`docs/BRIDGE.md`](docs/BRIDGE.md) |
 | Updater testen und JAR kopieren | `gradle :updater:test :updater:copyRuntimeJar` | `updater/build/distribution/ArmA3Sync-Updater.jar` |
 
 ## Startbares JAR
